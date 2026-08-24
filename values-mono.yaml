@@ -1,0 +1,97 @@
+# =============================================================================
+# oai-o1-adapter values — MONOLITHIC gNB
+# Complete, self-contained. Deploy with:
+#   helm install o1-mono ~/oai-o1-adapter-helm-templates -n ravi-ns -f values-mono.yaml
+# No --set needed. Everything the adapter uses is in this file.
+# =============================================================================
+
+namespace: ravi-ns
+
+image:
+  repository: bmw.ece.ntust.edu.tw/ravi/oai-o1-adapter
+  tag: main-v1
+  pullPolicy: Always
+
+replicaCount: 1
+
+# --- Scheduling: pinned to joule (radio node), tolerating its 5g-radio taint -
+nodeSelector:
+  kubernetes.io/hostname: joule
+tolerations:
+  - key: "dedicated"
+    operator: "Equal"
+    value: "5g-radio"
+    effect: "NoSchedule"
+affinity: {}
+
+# --- Northbound: how SMO (SDNC) reaches THIS adapter ------------------------
+# advertisedHost is written to config.json network.host and announced in
+# pnfRegistration; SDNC dials back into it, so it MUST be routable from the SMO.
+# .106 is bound on joule eno12399 (bypass) and is the monolithic adapter's IP.
+smo:
+  advertisedHost: "192.168.206.106"
+  netconfPort: 1830
+  sftpPort: 1222
+
+service:
+  type: LoadBalancer
+  loadBalancerIP: "192.168.206.106"
+
+# --- VES (adapter -> SMO collector, outbound) ------------------------------
+ves:
+  url: "http://192.168.8.69:30417/eventListener/v7"
+  username: sample1
+  password: sample1
+  pnfRegistration: true
+  heartbeatInterval: 30
+  fileExpiry: 86400
+  pmDataInterval: 30
+
+# --- Southbound telnet: adapter -> monolithic gNB ---------------------------
+# ClusterIP service DNS of the gNB management service (proven path; the joule
+# NodePort 30090 timed out, this resolves to the gNB pod :9090 and survives
+# pod restarts / IP changes).
+telnet:
+  host: "oai-gnb-mgmt-external.ravi-ns.svc.cluster.local"
+  port: 9090
+
+# --- NETCONF credentials (must match image-baked netconf user) --------------
+netconf:
+  username: netconf
+  password: "netconf!"
+
+# --- Alarms -----------------------------------------------------------------
+alarms:
+  internalConnectionLostTimeout: 3
+  loadDownlinkWarnThreshold: 50
+  loadDownlinkWarnTimeout: 30
+
+# --- Managed-element identity (monolithic gNB) ------------------------------
+info:
+  gnbDuId: 3602
+  gnbCuId: 0
+  cellLocalId: 1
+  granularityPeriod: 0
+  fileReportingPeriod: 0
+  nodeId: "oai-gnb-mono"
+  locationName: "NTUST BMW Lab, ECE, Taipei"
+  managedBy: "ManagementSystem=O-RAN-SC-ONAP-based-SMO"
+  managedElementType: "gNB-DU"
+  model: "nr-softmodem"
+  unitType: "gNB"
+
+logLevel: 3
+softwareVersion: "abcd"
+
+pmStorage:
+  enabled: false
+  size: 1Gi
+  storageClass: ""
+
+resources:
+  requests:
+    cpu: "250m"
+    memory: "256Mi"
+  limits:
+    cpu: "1"
+    memory: "512Mi"
