@@ -20,7 +20,7 @@ The main components are:
 
 ### 1.1 High-Level Architecture
 
-![alt text](resources/oai-o1-adapter.png)
+![alt text](<resources/OAI o1 adapter Ocloud.jpg>)
 
 The O1 Adapter separates the standardized O-RAN O1 management interface from the OAI gNB's internal Telnet interface.
 
