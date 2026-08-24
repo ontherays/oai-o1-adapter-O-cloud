@@ -6,7 +6,7 @@
 
 set -e
 
-REGISTRY="bmw.ece.ntust.edu.tw/ravi"
+REGISTRY=" <REGISTRY_HOST>/<REGISTRY_NAMESPACE>"
 TAG="dev-v1"
 GNB_TAG="2026.w30-o1"
 
