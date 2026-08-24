@@ -15,7 +15,7 @@
 namespace: ravi-ns
 
 image:
-  repository: bmw.ece.ntust.edu.tw/ravi/oai-o1-adapter
+  repository: <REGISTRY_HOST>/<REGISTRY_NAMESPACE>/oai-o1-adapter
   tag: dev-v5
   pullPolicy: Always
 

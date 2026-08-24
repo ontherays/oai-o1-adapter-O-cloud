@@ -160,7 +160,7 @@ sequenceDiagram
   (`o1-ip-bypass.sh` binds `.105` OCUDU and `.106` OAI on `eno12399`;
   **persist both in a systemd unit** or a reboot drops them and breaks mounts).
 - A reachable ONAP/O-RAN-SC SMO (SDNC RESTCONF + VES collector + DFC/InfluxDB).
-- A private image registry (`bmw.ece.ntust.edu.tw/ravi/`).
+- A private image registry (`<REGISTRY_HOST>/<REGISTRY_NAMESPACE>/`).
 
 ### 4.2 Software requirements
 
@@ -214,7 +214,7 @@ are present (the `_o1` line is the fix):
 ```bash
 cd ~/openairinterface5g
 docker build --target oai-gnb \
-  --tag bmw.ece.ntust.edu.tw/ravi/oai-gnb-fhi72:2026.w30-o1 \
+  --tag <REGISTRY_HOST>/<REGISTRY_NAMESPACE>/oai-gnb-fhi72:2026.w30-o1 \
   --file docker/Dockerfile.gNB.fhi72.ubuntu .
 ```
 
@@ -225,7 +225,7 @@ The image has an `ENTRYPOINT` (`tini -- entrypoint.sh`); a bare
 
 ```bash
 docker run --rm --entrypoint bash \
-  bmw.ece.ntust.edu.tw/ravi/oai-gnb-fhi72:2026.w30-o1 \
+  <REGISTRY_HOST>/<REGISTRY_NAMESPACE>/oai-gnb-fhi72:2026.w30-o1 \
   -lc "ldconfig -p | grep -i telnet"
 ```
 
@@ -295,16 +295,16 @@ The adapter's `config.c` parser **requires** `granularityPeriod` and
 ### 6.5 Tag and push
 
 ```bash
-docker tag adapter-gnb:latest bmw.ece.ntust.edu.tw/ravi/oai-o1-adapter:main-v1
+docker tag adapter-gnb:latest <REGISTRY_HOST>/<REGISTRY_NAMESPACE>/oai-o1-adapter:main-v1
 docker login bmw.ece.ntust.edu.tw
-docker push  bmw.ece.ntust.edu.tw/ravi/oai-o1-adapter:main-v1
+docker push  <REGISTRY_HOST>/<REGISTRY_NAMESPACE>/oai-o1-adapter:main-v1
 ```
 
 ### 6.6 Pre-deploy gate — standalone parse test
 
 ```bash
 docker run --rm --entrypoint bash \
-  bmw.ece.ntust.edu.tw/ravi/oai-o1-adapter:main-v1 \
+  <REGISTRY_HOST>/<REGISTRY_NAMESPACE>/oai-o1-adapter:main-v1 \
   -lc 'netopeer2-server -v2 -t 60 & sleep 3; cd /adapter && ./gnb-adapter 2>&1' | head -40
 ```
 
