@@ -1,4 +1,4 @@
-# oai-o1-adapter — O-Cloud Helm chart
+# oai-o1-adapter O-Cloud deployment
 
 Helm chart, build automation and integration documentation for running the
 **OAI O1-Adapter** on a Kubernetes O-Cloud, so that an OAI gNB can be managed by
