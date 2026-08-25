@@ -24,3 +24,7 @@
 * The subscribed PM data is sent to the PM data consumers (over Kafka). An rApp may be a PM data consumer.
 
 * The Influx Logger, which is a PM data consumer, stores PM data in an Influx database.
+
+
+* Running OAI → set DFC env to SEC_3GPP_PERFORMANCEASSURANCE_OUTPUT + TS28532.
+* unning OCUDU → set back to VES_NOTIFICATION_OUTPUT + empty.
