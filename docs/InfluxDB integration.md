@@ -907,3 +907,5 @@ converter setting serve both gNBs, with InfluxDB keeping them apart by FDN.!
 
 
 ![alt text](<../resources/DL tput.png>)
+
+![alt text](../resources/DL-UL.png)
